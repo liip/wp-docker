@@ -48,7 +48,9 @@ COPY ./wordpress.ini /usr/local/etc/php/conf.d
 RUN a2enmod rewrite expires
 
 # Setup SSL
-RUN apt-get update && apt-get install -y ssl-cert && rm -rf /var/lib/apt/lists/*
+
+COPY ./ssl.cnf /etc/ssl/ssl.cnf
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/ssl-cert-snakeoil.key -out /etc/ssl/certs/ssl-cert-snakeoil.pem -config /etc/ssl/ssl.cnf
 
 RUN a2ensite default-ssl \
 	&& a2enmod ssl
