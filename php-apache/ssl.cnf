@@ -1,21 +1,29 @@
-# As of macOS Catalina ssl certificates are required to have a extended key usage aswell as a validity period of 825 days or fewer
+# As of macOS Catalina ssl certificates are required to have a extended key usage as well as a validity period of 825 days or fewer
 # Now extended key usage is required. As it can only be set in a config file this file had to be created.
 # More information here: https://support.apple.com/en-us/HT210176
-# The default OpenSSL paramaters are taken from here: https://www.switch.ch/pki/manage/request/csr-openssl/ and change accordingly.
+# The default OpenSSL parameters are taken from here: https://stackoverflow.com/a/58795770/1328415
+
+[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+default_md = sha256
+default_days = 825
 
 [ req ]
-default_bits = 2048
-default_md = sha256
 prompt = no
-encrypt_key = no
-distinguished_name = dn
-req_extensions = req_ext
+default_bits = 4096
+distinguished_name = req_distinguished_name
+x509_extensions = req_ext
 
-[ dn ]
-C = CH
-O = Liip AG
-CN = localhost
+[ req_distinguished_name ]
+countryName = CH
+organizationName = Liip AG
+commonName = localhost
 
 [ req_ext ]
-extendedKeyUsage=critical,codeSigning,1.2.3.4
-extendedKeyUsage=serverAuth,clientAuth
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
