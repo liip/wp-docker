@@ -43,6 +43,16 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+# Install zip extension
+RUN set -xe; \
+	apt-get update -yqq && \
+	apt-get install -yqq \
+	libzip-dev zip unzip && \
+	docker-php-ext-configure zip --with-libzip && \
+	# Install the zip extension
+	docker-php-ext-install zip && \
+	php -m | grep -q 'zip'
+
 COPY ./wordpress.ini /usr/local/etc/php/conf.d
 
 RUN a2enmod rewrite expires
